@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Seller POS Interface</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    .pos-container {
+      margin: 50px auto;
+      max-width: 800px;
+    }
+    .pos-container h2 {
+      text-align: center;
+    }
+    .product-list {
+      margin-top: 30px;
+    }
+    .product-item {
+      padding: 10px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+    }
+    .cart-table {
+      margin-top: 30px;
+    }
+    .cart-table th,
+    .cart-table td {
+      padding: 10px;
+      text-align: center;
+    }
+    .total-price {
+      font-weight: bold;
+      margin-top: 20px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="container pos-container">
+    <h2>Seller POS Interface</h2>
+    <div class="product-list">
+      <div class="product-item">
+        <div class="col-xs-2">Product 1</div>
+        <div class="col-xs-2">SKU001</div>
+        <div class="col-xs-2">Each</div>
+        <div class="col-xs-2">$10</div>
+        <div class="col-xs-2">
+          <input type="number" class="form-control quantity" value="1">
+        </div>
+        <div class="col-xs-2">
+          <button class="btn btn-primary add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+      <div class="product-item">
+        <div class="col-xs-2">Product 2</div>
+        <div class="col-xs-2">SKU002</div>
+        <div class="col-xs-2">Each</div>
+        <div class="col-xs-2">$15</div>
+        <div class="col-xs-2">
+          <input type="number" class="form-control quantity" value="1">
+        </div>
+        <div class="col-xs-2">
+          <button class="btn btn-primary add-to-cart">Add to Cart</button>
+        </div>
+      </div>
+      <!-- Add more product items as needed -->
+    </div>
+    <div class="cart">
+      <h3>Cart</h3>
+      <table class="table cart-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>SKU</th>
+            <th>Unit</th>
+            <th>U. Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody class="cart-items"></tbody>
+      </table>
+      <div class="total-price">Total: $0</div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      var cartItems = [];
+      var total = 0;
+
+      $(".add-to-cart").click(function() {
+        var productItem = $(this).closest(".product-item");
+        var item = productItem.find(".col-xs-2:first-child").text();
+        var sku = productItem.find(".col-xs-2:nth-child(2)").text();
+        var unit = productItem.find(".col-xs-2:nth-child(3)").text();
+        var price = parseFloat(productItem.find(".col-xs-2:nth-child(4)").text().replace("$", ""));
+        var quantity = parseInt(productItem.find(".quantity").val());
+        var itemTotal = price * quantity;
+        total += itemTotal;
+
+        cartItems.push({ item: item, sku: sku, unit: unit, price: price, quantity: quantity, total: itemTotal });
+
+        $(".cart-items").empty();
+        for (var i = 0; i < cartItems.length; i++) {
+          $(".cart-items").append(`
+            <tr>
+              <td>${cartItems[i].item}</td>
+              <td>${cartItems[i].sku}</td>
+              <td>${cartItems[i].unit}</td>
+              <td>${cartItems[i].price}</td>
+              <td>${cartItems[i].quantity}</td>
+              <td>${cartItems[i].total}</td>
+            </tr>
+          `);
+        }
+
+        $(".total-price").text("Total: $" + total);
+      });
+    });
+  </script>
+</body>
+</html>
